@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ランキング - BMSG MUSIC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bmsg-black: #111111;
+            --bmsg-red: #e60012;
+            --rank-1: linear-gradient(135deg, #ffd700, #ffac06);
+            --rank-2: linear-gradient(135deg, #c0c0c0, #929292);
+            --rank-3: linear-gradient(135deg, #cd7f32, #a05a2c);
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--bmsg-black);
+        }
+
+        /* ナビゲーション */
+        .navbar {
+            background-color: var(--bmsg-black);
+            padding: 1rem 0;
+        }
+
+        /* ページヘッダー */
+        .page-heading {
+            background: var(--bmsg-black);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .page-heading h1 {
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: -1px;
+        }
+
+        /* タブデザイン */
+        .nav-pills .nav-link {
+            color: #666;
+            font-weight: bold;
+            border-radius: 50px;
+            padding: 10px 25px;
+            transition: 0.3s;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: var(--bmsg-black);
+            color: white;
+        }
+
+        /* ランキングカード共通 */
+        .ranking-card {
+            border: none;
+            border-radius: 20px;
+            background: white;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .ranking-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        /* ジャケット写真 (正方形・音楽アプリ風) */
+        .jacket-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            flex-shrink: 0;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .jacket-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: 0.3s;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .jacket-container:hover .play-overlay {
+            opacity: 1;
+        }
+
+        /* ランクバッジ */
+        .rank-num {
+            width: 45px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            text-align: center;
+            margin-right: 15px;
+        }
+
+        .top-1 { color: #ffd700; font-size: 2.5rem; }
+        .top-2 { color: #adb5bd; }
+        .top-3 { color: #cd7f32; }
+
+        /* コンテンツ情報 */
+        .song-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .artist-name {
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* 特別の1位カード */
+        .rank-1-special {
+            background: linear-gradient(145deg, #ffffff, #fffdf5);
+            border: 2px solid #ffd700;
+        }
+
+        /* トレンド表示 */
+        .trend-tag {
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 50px;
+        }
+
+        .up { background: #e6fff0; color: #10b981; }
+        .down { background: #fff0f0; color: #ef4444; }
+        .stay { background: #f3f4f6; color: #6b7280; }
+
+        /* フッター */
+        footer {
+            background: var(--bmsg-black);
+            color: #888;
+            padding: 50px 0 20px;
+            margin-top: 80px;
+        }
+
+        footer h5, footer a {
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .rank-num { font-size: 1.4rem; width: 30px; }
+            .jacket-container { width: 70px; height: 70px; }
+            .song-title { font-size: 1rem; }
+            .ranking-description { display: none; }
+            .ranking-action .btn { padding: 5px 15px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-vinyl-fill me-2"></i>BMSG MUSIC
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="bmsg-song-list.html">SongList</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="bmsg-ranking.html">Ranking</a></li>
+                    <li class="nav-item"><a class="nav-link" href="bmsg-mylist.html">MyList</a></li>
+                </ul>
+                <a href="#" class="btn btn-outline-light ms-lg-3 rounded-pill">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-heading">
+        <div class="container">
+            <h1 class="display-3 fw-bold mb-2">CHARTS</h1>
+            <p class="lead opacity-75">今、最も聴かれているBMSGミュージック</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <ul class="nav nav-pills justify-content-center mb-5" id="rankingTab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#overall">総合</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#weekly">週間</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#monthly">月間</button></li>
+        </ul>
+
+        <div class="tab-content" id="rankingTabContent">
+            <div class="tab-pane fade show active" id="overall">
+                
+                <div class="card ranking-card rank-1-special p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rank-num top-1">1</div>
+                        <div class="jacket-container me-4">
+                            <img src="images/vivid.jpg" class="jacket-img" alt="Vivid">
+                            <div class="play-overlay"><i class="bi bi-play-circle-fill"></i></div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="artist-name text-uppercase">MAZZEL</div>
+                            <h2 class="song-title">Vivid</h2>
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="trend-tag up"><i class="bi bi-graph-up-arrow"></i> +2</span>
+                                <small class="text-muted"><i class="bi bi-star-fill text-warning"></i> 4.9 (3,456)</small>
+                            </div>
+                        </div>
+                        <div class="ranking-action d-none d-md-block">
+                            <button class="btn btn-dark rounded-pill px-4">聴く</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card ranking-card p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rank-num top-2">2</div>
+                        <div class="jacket-container me-4">
+                            <img src="images/Drop.jpg" class="jacket-img" alt="Drop">
+                            <div class="play-overlay"><i class="bi bi-play-circle-fill"></i></div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="artist-name">HANA</div>
+                            <h2 class="song-title">Drop</h2>
+                            <div class="d-flex align-items-center gap-3 mt-1">
+                                <span class="trend-tag down"><i class="bi bi-graph-down-arrow"></i> -1</span>
+                                <small class="text-muted"><i class="bi bi-star-fill text-warning"></i> 4.7</small>
+                            </div>
+                        </div>
+                        <div class="ranking-action">
+                            <button class="btn btn-outline-dark rounded-pill px-4">詳細</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card ranking-card p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rank-num top-3">3</div>
+                        <div class="jacket-container me-4">
+                            <img src="images/MZ_JOKER.jpg" class="jacket-img" alt="JOKER">
+                            <div class="play-overlay"><i class="bi bi-play-circle-fill"></i></div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="artist-name">MAZZEL</div>
+                            <h2 class="song-title">J.O.K.E.R.</h2>
+                            <div class="d-flex align-items-center gap-3 mt-1">
+                                <span class="trend-tag up"><i class="bi bi-graph-up-arrow"></i> +1</span>
+                                <small class="text-muted"><i class="bi bi-star-fill text-warning"></i> 4.6</small>
+                            </div>
+                        </div>
+                        <div class="ranking-action">
+                            <button class="btn btn-outline-dark rounded-pill px-4">詳細</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card ranking-card p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rank-num text-muted">4</div>
+                        <div class="jacket-container me-4" style="width: 60px; height: 60px;">
+                            <img src="images/ByeGoodBye.jpg" class="jacket-img" alt="Bye-Good-Bye">
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="artist-name small">BE:FIRST</div>
+                            <h2 class="song-title fs-6">Bye-Good-Bye</h2>
+                        </div>
+                        <div class="text-end">
+                            <span class="trend-tag stay"><i class="bi bi-dash"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card ranking-card p-3">
+                    <div class="d-flex align-items-center">
+                        <div class="rank-num text-muted">5</div>
+                        <div class="jacket-container me-4" style="width: 60px; height: 60px;">
+                            <img src="images/sora.jpg" class="jacket-img" alt="空">
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="artist-name small">BE:FIRST</div>
+                            <h2 class="song-title fs-6">空</h2>
+                        </div>
+                        <div class="text-end">
+                            <span class="trend-tag stay"><i class="bi bi-dash"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled"><a class="page-link border-0" href="#"><i class="bi bi-chevron-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link rounded-circle mx-1" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link rounded-circle mx-1" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link border-0" href="#"><i class="bi bi-chevron-right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="fw-bold mb-3">BMSG MUSIC</h5>
+                </div>
+                <div class="col-md-4 mb-4 text-md-center">
+                    <h5 class="fw-bold mb-3">MENU</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-decoration-none opacity-75">利用規約</a></li>
+                        <li><a href="#" class="text-decoration-none opacity-75">プライバシーポリシー</a></li>
+                        <li><a href="#" class="text-decoration-none opacity-75">お問い合わせ</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4 text-md-end">
+                    <h5 class="fw-bold mb-3">FOLLOW US</h5>
+                    <div class="d-flex gap-3 justify-content-md-end">
+                        <a href="#"><i class="bi bi-twitter-x fs-4"></i></a>
+                        <a href="#"><i class="bi bi-instagram fs-4"></i></a>
+                        <a href="#"><i class="bi bi-youtube fs-4"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 border-secondary">
+            <p class="text-center small">&copy; 2026 BMSG MUSIC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

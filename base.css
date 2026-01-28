@@ -7,13 +7,13 @@
 }
 
 .navbar {
-  background-color: #1c2432;
+  background-color: #000000;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .hero-section,
 .page-heading {
-  background: linear-gradient(180deg, #1d2734 0%, #404a5d 100%);
+  background: linear-gradient(180deg, #000000 0%, #2b2b2c 100%);
   color: #ffffff;
   padding: 80px 0;
   margin-bottom: 40px;
@@ -112,20 +112,20 @@ footer {
 
 /* 通常時 */
 .pagination .page-link {
-  color: #212529;
+  color: #000000;
   border: 1px solid #dee2e6;
 }
 
 /* ホバー時 */
 .pagination .page-link:hover {
   background-color: #f1f3f5;
-  color: #212529;
+  color: #000000;
 }
 
 /* activeページ */
 .pagination .page-item.active .page-link {
-  background-color: #212529;
-  border-color: #212529;
+  background-color: #000000;
+  border-color: #000000;
   color: #fff;
 }
 
@@ -150,7 +150,7 @@ footer {
 
 .btn-login:hover, .btn-signup:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
   color: white !important;
 }
 

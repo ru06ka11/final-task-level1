@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品一覧 - BMSG MUSIC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="icons8-ハート-32.png">
+    <style>
+        :root {
+            --primary-color: #000;
+            --accent-color: #e63946;
+        }
+
+        body {
+            font-family: 'Noto+Sans+JP', sans-serif;
+            background-color: #fcfcfc;
+        }
+
+        /* ヒーローセクション */
+        .page-heading {
+            background: linear-gradient(135deg, #111 0%, #333 100%);
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+        }
+
+        /* サイドバーのアコーディオン化 */
+        .accordion-button:not(.collapsed) {
+            background-color: #eee;
+            color: #000;
+            shadow: none;
+        }
+
+        .filter-card {
+            position: sticky;
+            top: 20px;
+        }
+
+        /* 楽曲カードの音楽特化デザイン */
+        .anime-card {
+            border: none;
+            transition: transform 0.3s;
+            background: #fff;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .anime-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .card-img-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .anime-card img {
+            height: 240px;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .anime-card:hover img {
+            scale: 1.1;
+            filter: brightness(0.7);
+        }
+
+        /* ホバー時に現れる再生ボタン */
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: 0.3s;
+            color: white;
+            font-size: 3rem;
+            pointer-events: none;
+        }
+
+        .anime-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .text-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 3rem;
+        }
+
+        /* スマホ用フィルターボタン */
+        @media (max-width: 991.98px) {
+            .filter-sidebar {
+                display: none;
+            }
+
+            .mobile-filter-btn {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+                border-radius: 50px;
+                padding: 12px 25px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-vinyl-fill me-2"></i>BMSG MUSIC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#">SongList</a></li>
+                    <li class="nav-item"><a class="nav-link" href="bmsg-ranking.html">Ranling</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-outline-light ms-lg-3 px-4"
+                            href="bmsg-login.html">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-heading text-center">
+        <div class="container">
+            <h1 class="display-5 fw-bold mb-3">DISCOGRAPHY</h1>
+            <p class="lead mb-4">BMSGが放つすべての楽曲をチェック</p>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="input-group border-light">
+                        <input type="text" class="form-control" placeholder="曲名、アーティスト名で検索...">
+                        <button class="btn btn-danger px-4"><i class="bi bi-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-5">
+        <div class="row">
+            <aside class="col-lg-3 filter-sidebar">
+                <div class="filter-card">
+                    <h5 class="fw-bold mb-4"><i class="bi bi-sliders me-2"></i>FILTER</h5>
+                    <div class="accordion" id="filterAccordion">
+                        <div class="accordion-item border-0 border-bottom">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button bg-transparent fw-bold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#artistCollapse">
+                                    Artist Group
+                                </button>
+                            </h2>
+                            <div id="artistCollapse" class="accordion-collapse collapse show">
+                                <div class="accordion-body px-0">
+                                    <div class="form-check mb-2"><input class="form-check-input" type="checkbox"
+                                            id="a1"><label class="form-check-label w-100 d-flex justify-content-between"
+                                            for="a1">BE:FIRST <span
+                                                class="badge rounded-pill bg-light text-dark">24</span></label></div>
+                                    <div class="form-check mb-2"><input class="form-check-input" type="checkbox"
+                                            id="a2"><label class="form-check-label w-100 d-flex justify-content-between"
+                                            for="a2">MAZZEL <span
+                                                class="badge rounded-pill bg-light text-dark">18</span></label></div>
+                                    <div class="form-check mb-2"><input class="form-check-input" type="checkbox"
+                                            id="a3"><label class="form-check-label w-100 d-flex justify-content-between"
+                                            for="a3">Solo Artists <span
+                                                class="badge rounded-pill bg-light text-dark">12</span></label></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button bg-transparent collapsed fw-bold" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#typeCollapse">
+                                    Release Type
+                                </button>
+                            </h2>
+                            <div id="typeCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body px-0">
+                                    <div class="form-check mb-2"><input class="form-check-input" type="checkbox"
+                                            id="t1"><label class="form-check-label" for="t1">Digital Single</label>
+                                    </div>
+                                    <div class="form-check mb-2"><input class="form-check-input" type="checkbox"
+                                            id="t2"><label class="form-check-label" for="t2">Physical CD</label></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-secondary w-100 mt-4 rounded-pill">フィルターをクリア</button>
+                </div>
+            </aside>
+
+            <main class="col-lg-9">
+                <div class="d-flex justify-content-between align-items-end mb-4">
+                    <div>
+                        <h4 class="fw-bold mb-0">Track List</h4>
+                        <small class="text-muted">Showing 9 tracks</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <select class="form-select form-select-sm border-0 bg-light" style="width: auto;">
+                            <option>新着順</option>
+                            <option>人気順</option>
+                            <option>評価順</option>
+                        </select>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-dark active"><i class="bi bi-grid-3x3-gap"></i></button>
+                            <button class="btn btn-outline-dark"><i class="bi bi-list"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6 col-xl-4">
+                        <div class="card anime-card h-100">
+                            <div class="card-img-container">
+                                <img src="images/GRANDCHAMP.jpg" class="card-img-top" alt="GRAND CHAMP">
+                                <div class="play-overlay"><i class="bi bi-play-circle-fill"></i></div>
+                            </div>
+                            <div class="card-body">
+                                <span class="badge bg-black mb-2">BMSG ALLSTARS</span>
+                                <h5 class="fw-bold mb-1">GRAND CHAMP</h5>
+                                <p class="small text-muted text-clamp-2">覚悟とプライドを全て賭けて臨む挑戦者のアティテュードの表明。22人のマイクリレーが交錯する。
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div class="text-warning small"><i class="bi bi-star-fill"></i> 4.5</div>
+                                    <a href="#" class="btn btn-sm btn-outline-dark rounded-pill px-3">Detail</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-xl-4">
+                        <div class="card anime-card h-100">
+                            <div class="card-img-container">
+                                <img src="images/NONSTOP.jpg" class="card-img-top" alt="NON STOP">
+                                <div class="play-overlay"><i class="bi bi-play-circle-fill"></i></div>
+                            </div>
+                            <div class="card-body">
+                                <span class="badge bg-black mb-2">HANA</span>
+                                <h5 class="fw-bold mb-1">NON STOP</h5>
+                                <p class="small text-muted text-clamp-2">デビュー後も止まることなく走り続けるHANAの“今”をリアルに描いた、決意の一曲。</p>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div class="text-warning small"><i class="bi bi-star-fill"></i> 4.8</div>
+                                    <a href="#" class="btn btn-sm btn-outline-dark rounded-pill px-3">Detail</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-xl-4">
+                        <div class="card anime-card h-100">
+                            <div class="card-img-container">
+                                <img src="images/MZ_JOKER.jpg" class="card-img-top" alt="JOKER">
+                                <div class="play-overlay"><i class="bi bi-play-circle-fill"></i></div>
+                            </div>
+                            <div class="card-body">
+                                <span class="badge bg-black mb-2">MAZZEL</span>
+                                <h5 class="fw-bold mb-1">J.O.K.E.R.</h5>
+                                <p class="small text-muted text-clamp-2">
+                                    超スキルフルなダンスに、勝負と駆け引きを楽しむ挑発的な歌詞。メンバーの切り札と言えるスキルが散りばめられた楽曲は初手から切り札を切るギャンブラーのような予想外の一手で想像もつかないこの先の展開に期待感を与える1曲。
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div class="text-warning small"><i class="bi bi-star-fill"></i> 4.2</div>
+                                    <a href="#" class="btn btn-sm btn-outline-dark rounded-pill px-3">Detail</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled"><a class="page-link" href="#"><i
+                                    class="bi bi-chevron-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
+                    </ul>
+                </nav>
+            </main>
+        </div>
+    </div>
+
+    <button class="btn btn-black text-white d-lg-none mobile-filter-btn" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasFilter">
+        <i class="bi bi-funnel me-2"></i>フィルター
+    </button>
+
+    <div class="offcanvas offcanvas-bottom h-75" tabindex="-1" id="offcanvasFilter">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold">絞り込み条件</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <p>ここにフィルター項目が入ります...</p>
+            <button class="btn btn-dark w-100 mt-3 p-3">適用する</button>
+        </div>
+    </div>
+
+    <footer class="py-5 mt-5">
+        <div class="container text-center text-md-start">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <h5 class="fw-bold text-white"><i class="bi bi-vinyl-fill me-2"></i>BMSG Artist Support</h5>
+                    <p>公式の最新情報やリリーススケジュールをお届けします。</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="d-flex gap-4 justify-content-center justify-content-md-end">
+                        <a href="#" class="text-white fs-4"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="text-white fs-4"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-white fs-4"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-secondary my-4">
+            <p class="text-center mb-0 small">&copy; 2026 BMSG Artist Fan Project. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
