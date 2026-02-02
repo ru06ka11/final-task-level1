@@ -4,877 +4,435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>マイリスト - BMSG MUSIC</title>
+    <title>My Music Library - BMSG MUSIC</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Noto+Sans+JP:wght@400;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="base.css">
-     <link rel="icon" href="icons8-ハート-32.png">
     <style>
+        /* --- BMSG MUSIC MyList Custom CSS --- */
+        /* --- BMSG MUSIC MyList Premium CSS --- */
+
+        :root {
+            --bmsg-black: #000000;
+            --bmsg-dark-grey: #121212;
+            --bmsg-gold: #c6a355;
+            --accent-blue: #0d6efd;
+            --accent-red: #dc3545;
+            --bg-light: #f8f9fa;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--bmsg-black);
+            line-height: 1.6;
+        }
+
+        /* --- ナビゲーション --- */
+        .navbar {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* --- ヒーローヘッダー --- */
+        .page-header {
+            background: linear-gradient(180deg, var(--bmsg-black) 0%, var(--bmsg-dark-grey) 100%);
+            color: white;
+            padding: 100px 0 120px;
+            margin-bottom: -60px;
+            /* 下のカードを浮かせる演出 */
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .page-header h1 {
+            letter-spacing: 0.05em;
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+        }
+
+        /* --- 統計カード (Quick Stats) --- */
         .stat-card {
-            transition: transform 0.3s ease;
-            cursor: pointer;
+            background: #ffffff;
+            border: none;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition-speed) cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 10;
+            position: relative;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
-        .anime-table-card {
-            transition: all 0.2s ease;
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--bmsg-black);
+            letter-spacing: -0.02em;
         }
 
-        .anime-table-card:hover {
-            background-color: #f8f9fa;
+        /* --- ミュージックカード --- */
+        .music-card {
+            border: none;
+            background: transparent;
+            transition: var(--transition-speed);
         }
 
-        .anime-thumbnail {
-            width: 80px;
-            height: 120px;
+        .jacket-wrapper {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+            background-color: #222;
+            /* 読み込み前の背景 */
+        }
+
+        .jacket-img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border-radius: 8px;
+            transition: transform 0.8s ease;
         }
 
-        .progress-custom {
-            height: 20px;
+        .music-card:hover .jacket-img {
+            transform: scale(1.12);
         }
 
-        .tab-content {
-            min-height: 400px;
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
         }
 
-        .nav-pills .nav-link#watching-tab.active {
-            background-color: var(--viewing-color);
-            color: #fff;
+        .jacket-wrapper:hover .play-overlay {
+            opacity: 1;
         }
 
-        .nav-pills .nav-link#completed-tab.active {
-            background-color: var(--completed-color);
-            color: #fff;
+        .play-overlay i {
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
         }
 
-        .nav-pills .nav-link#plantowatch-tab.active {
-            background-color: var(--planned-color);
-            color: #fff;
+        /* --- テキスト装飾 --- */
+        .artist-tag {
+            color: var(--bmsg-gold);
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 15px;
         }
 
-        .nav-pills .nav-link#dropped-tab.active {
-            background-color: var(--paused-color);
-            color: #fff;
+        .song-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
         }
 
-        table {
-            min-width: 676px;
+        .media-badge {
+            font-size: 0.68rem;
+            font-weight: bold;
+            padding: 3px 10px;
+            border-radius: 6px;
+            background: #e9ecef;
+            color: #495057;
+            border: 1px solid transparent;
         }
 
-        @media (max-width: 767px) {
+        .loop-bar {
+            height: 5px;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.06);
+            margin-top: 10px;
+        }
 
-            /* sm以下 */
-            #myTab .nav-link {
-                font-size: 0.75rem;
-                white-space: nowrap;
+        /* --- タブメニュー (Pills) --- */
+        .nav-pills-custom .nav-link {
+            color: #555;
+            font-weight: bold;
+            border-radius: 50px;
+            padding: 12px 28px;
+            transition: 0.2s;
+        }
+
+        .nav-pills-custom .nav-link.active {
+            background-color: var(--bmsg-black);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* --- フッター (漆黒デザイン) --- */
+        footer.bg-black {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+        }
+
+        /* SNSアイコンやリンクの色を調整 */
+        footer .text-white {
+            color: #ffffff !important;
+        }
+
+        /* コピーライトなどの薄い文字用 */
+        footer .text-white-50 {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        /* ホバー時にゴールドに光らせる演出（任意） */
+        footer a:hover {
+            color: #c6a355 !important;
+            transition: 0.3s;
+        }
+
+        /* --- アニメーション --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        /* スマホサイズ */
-        @media (max-width: 575px) {
+        .music-card {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        }
 
-            #myTab .nav-link {
-                font-size: 0.75rem;
-                padding: 0.5rem 0.4rem;
-                white-space: nowrap;
+        /* カードの順次表示 */
+        .col:nth-child(1) .music-card {
+            animation-delay: 0.1s;
+        }
+
+        .col:nth-child(2) .music-card {
+            animation-delay: 0.15s;
+        }
+
+        .col:nth-child(3) .music-card {
+            animation-delay: 0.2s;
+        }
+
+        .col:nth-child(4) .music-card {
+            animation-delay: 0.25s;
+        }
+
+        .col:nth-child(5) .music-card {
+            animation-delay: 0.3s;
+        }
+
+        /* --- モバイル対応 --- */
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 60px 0 80px;
             }
 
-            #myTab .nav-link i {
-                font-size: 1rem;
+            .stat-value {
+                font-size: 1.6rem;
+            }
+
+            .jacket-wrapper {
+                border-radius: 12px;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- ナビゲーションバー -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-black sticky-top shadow">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">
-                <i class="bi bi-film"></i> BMSG MUSIC
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="bmsg-song-list.html">SongList</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="bmsg-ranking.html">Ranking</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">MyList</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="bmsg-community.html">Community</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link d-lg-none" href="bmsg-login.html">Login</a>
-                    </li>
-                </ul>
-                <a href="bmsg-login.html" class="btn btn-light ms-3 d-none d-lg-block">
-                    <i class="bi bi-person-circle"></i> Login</a>
+            <a class="navbar-brand fw-bold" href="index.html"><i class="bi bi-vinyl-fill me-2 text-white"></i>BMSG MUSIC</a>
+            <div class="ms-auto d-flex align-items-center">
+                <span class="text-white me-3 d-none d-sm-inline small">Welcome, BESTY</span>
+                <div class="rounded-circle bg-secondary" style="width: 35px; height: 35px; border: 2px solid #555;">
+                </div>
             </div>
         </div>
     </nav>
 
-    <!-- ページヘッダー -->
-    <div class="page-heading">
+    <header class="page-header text-center">
         <div class="container">
-            <h1 class="display-4 fw-bold mb-3">
-                <i class="bi bi-star-fill"></i> マイリスト
-            </h1>
-            <p class="lead">あなたの再生記録と進捗を管理しよう</p>
+            <h1 class="display-6 fw-bold">MY COLLECTION</h1>
+            <p class="opacity-75">あなたとBMSGアーティストの記録</p>
         </div>
-    </div>
+    </header>
 
-    <div class="container">
-        <!-- 統計カード -->
+    <main class="container">
         <div class="row g-4 mb-5">
-            <div class="col-md-3">
-                <div class="card stat-card border-primary">
-                    <div class="card-body text-center">
-                        <i class="bi bi-play-circle-fill text-primary display-4 mb-3"></i>
-                        <h3 class="fw-bold mb-1">12</h3>
-                        <p class="text-muted mb-0">再生中</p>
-                    </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card p-4 text-center">
+                    <div class="small text-muted mb-1">Total Listen</div>
+                    <div class="stat-value">1,284 <span class="fs-6">回</span></div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card stat-card border-success">
-                    <div class="card-body text-center">
-                        <i class="bi bi-check-circle-fill text-success display-4 mb-3"></i>
-                        <h3 class="fw-bold mb-1">45</h3>
-                        <p class="text-muted mb-0">再生済み</p>
-                    </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card p-4 text-center border-bottom border-primary border-4">
+                    <div class="small text-muted mb-1">Heavy Rotation</div>
+                    <div class="stat-value text-primary">12 <span class="fs-6">曲</span></div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card stat-card border-warning">
-                    <div class="card-body text-center">
-                        <i class="bi bi-clock-fill text-warning display-4 mb-3"></i>
-                        <h3 class="fw-bold mb-1">23</h3>
-                        <p class="text-muted mb-0">あとで聞く</p>
-                    </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card p-4 text-center">
+                    <div class="small text-muted mb-1">Watch Time</div>
+                    <div class="stat-value">342 <span class="fs-6">h</span></div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card stat-card border-danger">
-                    <div class="card-body text-center">
-                        <i class="bi bi-x-circle-fill text-danger display-4 mb-3"></i>
-                        <h3 class="fw-bold mb-1">8</h3>
-                        <p class="text-muted mb-0">再生中断</p>
-                    </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card p-4 text-center border-bottom border-warning border-4">
+                    <div class="small text-muted mb-1">Rank</div>
+                    <div class="stat-value text-warning">GOLD</div>
                 </div>
             </div>
         </div>
 
-        <!-- タブナビゲーション -->
-        <ul class="nav nav-pills nav-fill mb-4" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="watching-tab" data-bs-toggle="pill" data-bs-target="#watching"
-                    type="button" role="tab">
-                    <i class="bi bi-play-circle"></i>
-                    <span class="d-none d-sm-inline">再生中 (12)</span>
-                    <span class="d-inline d-sm-none">再生中</span>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="completed-tab" data-bs-toggle="pill" data-bs-target="#completed"
-                    type="button" role="tab">
-                    <i class="bi bi-check-circle"></i>
-                    <span class="d-none d-sm-inline">再生済み (45)</span>
-                    <span class="d-inline d-sm-none">済</span>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="plantowatch-tab" data-bs-toggle="pill" data-bs-target="#plantowatch"
-                    type="button" role="tab">
-                    <i class="bi bi-clock"></i>
-                    <span class="d-none d-sm-inline">あとで聞く (23)</span>
-                    <span class="d-inline d-sm-none">予定</span>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="dropped-tab" data-bs-toggle="pill" data-bs-target="#dropped" type="button"
-                    role="tab">
-                    <i class="bi bi-x-circle"></i>
-                    <span class="d-none d-sm-inline">再生中断 (8)</span>
-                    <span class="d-inline d-sm-none">中断</span>
-                </button>
-            </li>
-        </ul>
-
-        <!-- タブコンテンツ -->
-        <div class="tab-content" id="myTabContent">
-            <!-- 視聴中タブ -->
-            <div class="tab-pane fade show active" id="watching" role="tabpanel">
-                <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><i class="bi bi-play-circle-fill"></i> 視聴中の作品</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive-md">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="width: 100px;">作品</th>
-                                        <th>タイトル</th>
-                                        <th style="width: 170px;">評価</th>
-                                        <th style="width: 180px;">視聴進捗</th>
-                                        <th style="width: 150px;">最終視聴</th>
-                                        <th style="width: 100px;">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="anime-table-card">
-                                        <td>
-                                            <img src="images/Sailling.jpg" class="anime-thumbnail" alt="異世界の勇者">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-1 fw-bold text-clamp-2">BE:FIRST</h6>
-                                            <h4 class="mb-1 fw-bold text-clamp-2">Sailling</h4>
-                                            <div>
-                                                <span class="badge bg-primary status-badge">ファンタジー</span>
-                                                <span class="badge bg-success status-badge">放送中</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="rating-stars">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-half"></i>
-                                            </div>
-                                            <small class="text-muted">4.5</small>
-                                        </td>
-                                        <td>
-                                            <div class="mb-1">
-                                                <small class="text-muted">8話 / 24話</small>
-                                            </div>
-                                            <div class="progress progress-custom">
-                                                <div class="progress-bar bg-primary" style="width: 33%">33%</div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">2025/11/15</small>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary" title="詳細">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="削除">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="anime-table-card">
-                                        <td>
-                                            <img src="images/StarWish.jpg" class="anime-thumbnail" alt="StarWish">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-1 fw-bold text-clamp-2">STARGLOW</h6>
-                                            <h4 class="mb-1 fw-bold text-clamp-2">StarWish</h4>
-                                            <div>
-                                                <span class="badge bg-danger status-badge">恋愛</span>
-                                                <span class="badge bg-success status-badge">放送中</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="rating-stars">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-half"></i>
-                                            </div>
-                                            <small class="text-muted">4.8</small>
-                                        </td>
-                                        <td>
-                                            <div class="mb-1">
-                                                <small class="text-muted">7話 / 12話</small>
-                                            </div>
-                                            <div class="progress progress-custom">
-                                                <div class="progress-bar bg-danger" style="width: 58%">58%</div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">2025/11/2</small>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary" title="詳細">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="削除">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="anime-table-card">
-                                        <td>
-                                            <img src="images/vivid.jpg" class="anime-thumbnail" alt="Vivid">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-1 fw-bold text-clamp-2">MAZZEL</h6>
-                                            <h4 class="mb-1 fw-bold text-clamp-2">Vivid</h4>
-                                            <div>
-                                                <span class="badge bg-info status-badge">SF</span>
-                                                <span class="badge bg-success status-badge">放送中</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="rating-stars">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star"></i>
-                                            </div>
-                                            <small class="text-muted">4.2</small>
-                                        </td>
-                                        <td>
-                                            <div class="mb-1">
-                                                <small class="text-muted">5話 / 24話</small>
-                                            </div>
-                                            <div class="progress progress-custom">
-                                                <div class="progress-bar bg-info" style="width: 21%">21%</div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">2025/10/31</small>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary" title="詳細">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="削除">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="anime-table-card">
-                                        <td>
-                                            <img src="images/BEST.webp" class="anime-thumbnail" alt="魔法学園">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-1 fw-bold text-clamp-2">BE:FIRST</h6>
-                                            <h4 class="mb-1 fw-bold text-clamp-2">Stare In Wonder</h4>
-                                            <div>
-                                                <span class="badge bg-primary status-badge">ファンタジー</span>
-                                                <span class="badge bg-success status-badge">放送中</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="rating-stars">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-half"></i>
-                                            </div>
-                                            <small class="text-muted">4.6</small>
-                                        </td>
-                                        <td>
-                                            <div class="mb-1">
-                                                <small class="text-muted">10話 / 12話</small>
-                                            </div>
-                                            <div class="progress progress-custom">
-                                                <div class="progress-bar bg-success" style="width: 83%">83%</div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">2025/10/30</small>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary" title="詳細">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="削除">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- 視聴済みタブ -->
-            <div class="tab-pane fade" id="completed" role="tabpanel">
-                <div class="card mb-4">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0"><i class="bi bi-check-circle-fill"></i> 視聴済みの作品</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive-md">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="width: 100px;">作品</th>
-                                        <th>タイトル</th>
-                                        <th style="width: 150px;">あなたの評価</th>
-                                        <th style="width: 150px;">視聴完了日</th>
-                                        <th style="width: 100px;">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="anime-table-card">
-                                        <td>
-                                            <img src="images/GRANDCHAMP.jpg" class="anime-thumbnail" alt="GC">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-1 fw-bold text-clamp-2">BMSG ALLSTARS</h6>
-                                            <h4 class="mb-1 fw-bold text-clamp-2">GRAND CHAMP</h4>
-                                            <div>
-                                                <span class="badge bg-primary status-badge">ファンタジー</span>
-                                                <span class="badge bg-secondary status-badge">完結</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="rating-stars">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-half"></i>
-                                            </div>
-                                            <small class="text-muted">4.7</small>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">2025/11/01</small>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary" title="詳細">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="削除">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="anime-table-card">
-                                        <td>
-                                            <img src="images/Memoria.jpg" class="anime-thumbnail" alt="未来探偵">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-1 fw-bold text-clamp-2">BMSG MARINE</h6>
-                                            <h4 class="mb-1 fw-bold text-clamp-2">Memoria</h4>
-                                            <div>
-                                                <span class="badge bg-info status-badge">SF</span>
-                                                <span class="badge bg-secondary status-badge">完結</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="rating-stars">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star"></i>
-                                            </div>
-                                            <small class="text-muted">4.4</small>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">2025/8/25</small>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary" title="詳細">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="削除">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="anime-table-card">
-                                        <td>
-                                            <img src="images/BADLOVE.jpg" class="anime-thumbnail" alt="BADLOVE">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-1 fw-bold text-clamp-2">HANA</h6>
-                                            <h4 class="mb-1 fw-bold text-clamp-2">BAD LOVE</h4>
-                                            <div>
-                                                <span class="badge bg-danger status-badge">恋愛</span>
-                                                <span class="badge bg-secondary status-badge">完結</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="rating-stars">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-half"></i>
-                                            </div>
-                                            <small class="text-muted">4.5</small>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">2024/10/15</small>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary" title="詳細">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="削除">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 視聴予定タブ -->
-            <div class="tab-pane fade" id="plantowatch" role="tabpanel">
-                <div class="card mb-4">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="mb-0"><i class="bi bi-clock-fill"></i> 再生予定の作品</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive-md">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="width: 100px;">作品</th>
-                                        <th>タイトル</th>
-                                        <th style="width: 150px;">平均評価</th>
-                                        <th style="width: 150px;">追加日</th>
-                                        <th style="width: 100px;">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="anime-table-card">
-                                        <td>
-                                            <img src="images/OnlyYou.jpg" class="anime-thumbnail" alt="OnlyYou">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-1 fw-bold text-clamp-2">MAZZEL</h6>
-                                            <h4 class="mb-1 fw-bold text-clamp-2">Only You</h4>
-                                            <div>
-                                                <span class="badge bg-dark status-badge">ホラー</span>
-                                                <span class="badge bg-success status-badge">放送中</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="rating-stars">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star"></i>
-                                            </div>
-                                            <small class="text-muted">4.3</small>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">2025/5/10</small>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary" title="詳細">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="削除">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="anime-table-card">
-                                        <td>
-                                            <img src="images/Gaitou.jpg" class="anime-thumbnail" alt="街灯">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-1 fw-bold text-clamp-2">BE:FIRST</h6>
-                                            <h4 class="mb-1 fw-bold text-clamp-2">街灯</h4>
-                                            <div>
-                                                <span class="badge status-badge"
-                                                    style="background-color: #f97316;">グルメ</span>
-                                                <span class="badge bg-success status-badge">放送中</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="rating-stars">
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star-fill"></i>
-                                                <i class="bi bi-star"></i>
-                                            </div>
-                                            <small class="text-muted">4.1</small>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">2024/11/05</small>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary" title="詳細">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="削除">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 視聴中断タブ -->
-            <div class="tab-pane fade" id="dropped" role="tabpanel">
-                <div class="card mb-4">
-                    <div class="card-header bg-danger text-white">
-                        <h5 class="mb-0"><i class="bi bi-x-circle-fill"></i> 視聴中断した作品</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive-md">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="width: 100px;">作品</th>
-                                        <th>タイトル</th>
-                                        <th style="width: 150px;">中断時点</th>
-                                        <th style="width: 150px;">中断日</th>
-                                        <th style="width: 100px;">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="anime-table-card">
-                                        <td>
-                                            <img src="images/MZ_JOKER.jpg" class="anime-thumbnail" alt="JOKER">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-1 fw-bold text-clamp-2">MAZZEL</h6>
-                                            <h6 class="mb-1 fw-bold text-clamp-2">JOKER</h6>
-                                            <div>
-                                                <span class="badge bg-info status-badge">SF</span>
-                                                <span class="badge bg-secondary status-badge">完結</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">3話 / 24話 (13%)</small>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">2024/09/20</small>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary" title="詳細">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="削除">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="anime-table-card">
-                                        <td>
-                                            <img src="images/Drop.jpg" class="anime-thumbnail" alt="Drop">
-                                        </td>
-                                        <td>
-                                            <h6 class="mb-1 fw-bold text-clamp-2">HANA</h6>
-                                            <h4 class="mb-1 fw-bold text-clamp-2">Drop</h4>
-                                            <div>
-                                                <span class="badge" style="background-color: #fbbf24;">コメディ</span>
-                                                <span class="badge bg-secondary status-badge">完結</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">2話 / 12話 (17%)</small>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">2024/08/15</small>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-primary" title="詳細">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="削除">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5 gap-3">
+            <ul class="nav nav-pills nav-pills-custom" id="pills-tab" role="tablist">
+                <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill">すべて</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="pill">MV</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="pill">お気に入り</button></li>
+            </ul>
+            <div class="input-group style=" max-width: 300px;">
+                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control border-start-0 shadow-none" placeholder="楽曲・アーティスト検索">
             </div>
         </div>
 
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
 
-        <!-- 視聴統計 -->
-        <div class="row mb-5">
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header bg-light">
-                        <h5 class="mb-0"><i class="bi bi-graph-up"></i> 視聴統計</h5>
+            <div class="col">
+                <div class="music-card">
+                    <div class="jacket-wrapper mb-3">
+                        <img src="images/Sailling.jpg" class="jacket-img" alt="Sailing"
+                            onerror="this.src='https://via.placeholder.com/400x400/111/fff?text=Sailing'">
+                        <div class="play-overlay">
+                            <i class="bi bi-play-circle-fill text-white fs-1"></i>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="mb-4">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>総視聴作品数</span>
-                                <strong>88作品</strong>
-                            </div>
-                            <div class="progress" style="height: 25px;">
-                                <div class="progress-bar bg-primary" style="width: 14%">
-                                    <small>視聴中 12</small>
-                                </div>
-                                <div class="progress-bar bg-success" style="width: 51%">
-                                    <small>視聴済み 45</small>
-                                </div>
-                                <div class="progress-bar bg-warning" style="width: 26%">
-                                    <small>視聴予定 23</small>
-                                </div>
-                                <div class="progress-bar bg-danger" style="width: 9%">
-                                    <small>中断 8</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="row text-center">
-                            <div class="col-6 mb-3">
-                                <h4 class="text-primary fw-bold">1,280</h4>
-                                <small class="text-muted">総視聴エピソード数</small>
-                            </div>
-                            <div class="col-6 mb-3">
-                                <h4 class="text-success fw-bold">640</h4>
-                                <small class="text-muted">視聴時間（時間）</small>
-                            </div>
-                            <div class="col-6">
-                                <h4 class="text-warning fw-bold">4.3</h4>
-                                <small class="text-muted">平均評価</small>
-                            </div>
-                            <div class="col-6">
-                                <h4 class="text-info fw-bold">18</h4>
-                                <small class="text-muted">レビュー投稿数</small>
-                            </div>
-                        </div>
+                    <div class="artist-tag mb-1">BE:FIRST</div>
+                    <h6 class="fw-bold mb-2 text-truncate">Sailing</h6>
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="media-badge">MV</span>
+                        <span class="small text-muted">Loop: 245</span>
+                    </div>
+                    <div class="progress loop-bar">
+                        <div class="progress-bar bg-primary" style="width: 80%"></div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header bg-light">
-                        <h5 class="mb-0"><i class="bi bi-pie-chart-fill"></i> ジャンル別統計</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span><span class="badge bg-primary">ファンタジー</span></span>
-                                <strong>28作品</strong>
-                            </div>
-                            <div class="progress" style="height: 20px;">
-                                <div class="progress-bar bg-primary" style="width: 32%">32%</div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span><span class="badge bg-danger">恋愛</span></span>
-                                <strong>22作品</strong>
-                            </div>
-                            <div class="progress" style="height: 20px;">
-                                <div class="progress-bar bg-danger" style="width: 25%">25%</div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span><span class="badge bg-warning text-dark">アクション</span></span>
-                                <strong>18作品</strong>
-                            </div>
-                            <div class="progress" style="height: 20px;">
-                                <div class="progress-bar bg-warning" style="width: 20%">20%</div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span><span class="badge bg-info">SF</span></span>
-                                <strong>12作品</strong>
-                            </div>
-                            <div class="progress" style="height: 20px;">
-                                <div class="progress-bar bg-info" style="width: 14%">14%</div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span><span class="badge bg-secondary">その他</span></span>
-                                <strong>8作品</strong>
-                            </div>
-                            <div class="progress" style="height: 20px;">
-                                <div class="progress-bar bg-secondary" style="width: 9%">9%</div>
-                            </div>
+            <div class="col">
+                <div class="music-card">
+                    <div class="jacket-wrapper mb-3">
+                        <img src="images/Vivid.jpg" class="jacket-img" alt="Vivid"
+                            onerror="this.src='https://via.placeholder.com/400x400/333/fff?text=Vivid'">
+                        <div class="play-overlay">
+                            <i class="bi bi-play-circle-fill text-white fs-1"></i>
                         </div>
                     </div>
+                    <div class="artist-tag mb-1">MAZZEL</div>
+                    <h6 class="fw-bold mb-2 text-truncate">Vivid</h6>
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="media-badge">MV</span>
+                        <span class="media-badge text-danger border-danger border">LIVE</span>
+                    </div>
+                    <div class="progress loop-bar">
+                        <div class="progress-bar bg-danger" style="width: 45%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="music-card">
+                    <div class="jacket-wrapper mb-3">
+                        <img src="images/BEST.webp" class="jacket-img" alt="Song">
+                        <div class="play-overlay">
+                            <i class="bi bi-play-circle-fill text-white fs-1"></i>
+                        </div>
+                    </div>
+                    <div class="artist-tag mb-1">BE:FIRST</div>
+                    <h6 class="fw-bold mb-2 text-truncate">I Want You Back</h6>
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="media-badge">Audio</span>
+                        <span class="small text-muted">Perfect!</span>
+                    </div>
+                    <div class="progress loop-bar">
+                        <div class="progress-bar bg-success" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row mt-5 pt-5 border-top g-4">
+            <div class="col-lg-7">
+                <div class="p-4 bg-white rounded-4 shadow-sm h-100">
+                    <h5 class="fw-bold mb-4"><i class="bi bi-pie-chart-fill me-2 text-primary"></i>Artist Share</h5>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small fw-bold mb-1">
+                            <span>BE:FIRST</span><span>60%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-dark" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small fw-bold mb-1">
+                            <span>MAZZEL</span><span>25%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-secondary" style="width: 25%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small fw-bold mb-1"><span>Novel
+                                Core</span><span>15%</span></div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-light text-dark" style="width: 15%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div
+                    class="p-4 bg-dark text-white rounded-4 shadow-sm h-100 text-center d-flex flex-column justify-content-center">
+                    <i class="bi bi-award-fill text-warning display-4 mb-3"></i>
+                    <h5 class="fw-bold">Level: BMSG Expert</h5>
+                    <p class="small opacity-75">全アーティストの楽曲を5回以上リピートしました。次のランクまであと12曲です！</p>
+                    <button class="btn btn-outline-light btn-sm rounded-pill mt-3 mx-auto px-4">詳細を見る</button>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- フッター -->
-    <footer class="py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <h5 class="fw-bold mb-3"><i class="bi bi-film"></i> BMSG MUSIC</h5>
-                    \
-                </div>
-                <div class="col-md-2 mb-3">
-                    <h6 class="fw-bold mb-3">サイト情報</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-light text-decoration-none">About</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">利用規約</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">プライバシー</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2 mb-3">
-                    <h6 class="fw-bold mb-3">サポート</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-light text-decoration-none">ヘルプ</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">お問い合わせ</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">FAQ</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <h6 class="fw-bold mb-3">フォローする</h6>
-                    <div class="d-flex gap-3">
-                        <a href="#" class="text-light"><i class="bi bi-twitter fs-4"></i></a>
-                        <a href="#" class="text-light"><i class="bi bi-instagram fs-4"></i></a>
-                        <a href="#" class="text-light"><i class="bi bi-youtube fs-4"></i></a>
-                        <a href="#" class="text-light"><i class="bi bi-discord fs-4"></i></a>
-                    </div>
-                </div>
+    <footer class="py-5 mt-5 bg-black">
+        <div class="container text-center">
+            <h5 class="fw-bold text-white mb-4">BMSG MUSIC</h5>
+            <div class="d-flex justify-content-center gap-4 mb-4">
+                <a href="#" class="text-white"><i class="bi bi-twitter-x fs-4"></i></a>
+                <a href="#" class="text-white"><i class="bi bi-instagram fs-4"></i></a>
+                <a href="#" class="text-white"><i class="bi bi-youtube fs-4"></i></a>
             </div>
-            <hr class="border-light">
-            <p class="text-center text-light mb-0">&copy; 2025 BMSG MUSIC. All rights reserved.</p>
+            <hr class="border-secondary opacity-25">
+            <p class="small mb-0">&copy; 2026 BMSG MUSIC.</p>
         </div>
     </footer>
-    <button id="backToTopBtn" class="btn shadow d-flex align-items-center justify-content-center">
-        <i class="bi bi-chevron-up"></i>
-    </button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="common.js"></script>
 </body>
 
 </html>

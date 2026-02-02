@@ -14,14 +14,19 @@
             --bmsg-black: #050505;
             --bmsg-dark: #121212;
             --bmsg-accent: #6366f1;
-            /* 鮮やかなインディゴ */
             --glass-white: rgba(255, 255, 255, 0.05);
         }
 
         body {
             background-color: var(--bmsg-black);
-            color: #ffffff;
+            /* 全体的な文字色を白に固定 */
+            color: #ffffff !important;
             font-family: 'Noto Sans JP', sans-serif;
+        }
+
+        /* 既存のグレー文字クラスを白系に上書き */
+        .text-muted, .text-secondary {
+            color: rgba(255, 255, 255, 0.7) !important;
         }
 
         /* ガラス質感のカード */
@@ -63,12 +68,15 @@
             color: white;
         }
 
-        /* 作品サムネイルの円形バッジ */
         .anime-thumb {
             width: 48px;
             height: 48px;
             border-radius: 12px;
             object-fit: cover;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
         }
 
         .nav-link.active {
@@ -81,6 +89,7 @@
             filter: blur(5px);
             transition: filter 0.3s;
             cursor: pointer;
+            color: rgba(255, 255, 255, 0.8) !important;
         }
 
         .spoiler-text:hover {
@@ -96,6 +105,17 @@
         .trending-item:hover {
             border-left-color: var(--bmsg-accent);
         }
+
+        /* フォーム入力欄の文字を白にする */
+        .form-control, .form-select {
+            background-color: #1a1a1a !important;
+            color: white !important;
+            border-color: #333 !important;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.4) !important;
+        }
     </style>
 </head>
 
@@ -104,11 +124,11 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top"
         style="background: rgba(5,5,5,0.8); backdrop-filter: blur(10px);">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-vinyl-fill me-2"></i>BMSG MUSIC</a>
+            <a class="navbar-brand fw-bold text-white" href="index.html"><i class="bi bi-vinyl-fill me-2"></i>BMSG MUSIC</a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="#">Community</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="bmsg-community.html">Community</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Artists</a></li>
                 </ul>
             </div>
@@ -118,13 +138,14 @@
     <div class="container py-5">
         <div class="row align-items-center">
             <div class="col-md-8">
-                <h1 class="display-5 fw-bold mb-2">Feed</h1>
-                <p class="text-muted">最新の感想、考察、音楽体験をシェアしましょう。</p>
+                <h1 class="display-5 fw-bold mb-2 text-white">COMMUNITY</h1>
+                <p class="text-white">最新の感想、考察、音楽体験をシェアしましょう。</p>
             </div>
             <div class="col-md-4 text-md-end">
                 <div class="btn-group">
-                    <button class="btn btn-outline-light btn-sm dropdown-toggle" data-bs-toggle="dropdown">Sort by:
-                        Newest</button>
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle text-white" data-bs-toggle="dropdown">
+                        Sort by: Newest
+                    </button>
                     <ul class="dropdown-menu dropdown-menu-dark">
                         <li><a class="dropdown-item" href="#">Newest</a></li>
                         <li><a class="dropdown-item" href="#">Popular</a></li>
@@ -142,19 +163,17 @@
                     <div class="d-flex align-items-center mb-3">
                         <img src="https://placehold.co/100x100/111/fff?text=Art" class="anime-thumb me-3">
                         <div>
-                            <h6 class="mb-0 fw-bold">Star Wish</h6>
-                            <small class="text-secondary">Posted by <span class="text-white">SkyWalker</span> • 10m
-                                ago</small>
+                            <h6 class="mb-0 fw-bold text-white">Star Wish</h6>
+                            <small class="text-white-50">Posted by <span class="text-white">SkyWalker</span> • 10m ago</small>
                         </div>
                         <span class="badge bg-primary ms-auto">IMPRESSION</span>
                     </div>
                     <h5 class="mb-2 fw-bold text-white">サビの盛り上がりと映像がリンクしすぎて震えた...</h5>
-                    <p class="text-white small">特に後半3分からのギターソロ、キャラクターの心情を代弁しているようで本当に神演出でした。</p>
+                    <p class="text-white small" style="opacity: 0.9;">特に後半3分からのギターソロ、キャラクターの心情を代弁しているようで本当に神演出でした。</p>
                     <div class="d-flex gap-3 mt-3">
-                        <button class="btn btn-sm text-white-50 p-0"><i class="bi bi-fire me-1"></i> 124</button>
-                        <button class="btn btn-sm text-white-50 p-0"><i class="bi bi-chat-left-text me-1"></i>
-                            18</button>
-                        <button class="btn btn-sm text-white-50 p-0 ms-auto"><i class="bi bi-bookmark"></i></button>
+                        <button class="btn btn-sm text-white p-0"><i class="bi bi-fire me-1"></i> 124</button>
+                        <button class="btn btn-sm text-white p-0"><i class="bi bi-chat-left-text me-1"></i> 18</button>
+                        <button class="btn btn-sm text-white p-0 ms-auto"><i class="bi bi-bookmark"></i></button>
                     </div>
                 </div>
 
@@ -162,19 +181,17 @@
                     <div class="d-flex align-items-center mb-3">
                         <img src="https://placehold.co/100x100/222/fff?text=Moon" class="anime-thumb me-3">
                         <div>
-                            <h6 class="mb-0 fw-bold">Moonchaser - <span class="text-muted fw-normal">Final
-                                    Chapter</span></h6>
-                            <small class="text-secondary">Posted by <span class="text-white">TheoryMaster</span> • 1h
-                                ago</small>
+                            <h6 class="mb-0 fw-bold text-white">Moonchaser - <span class="text-white-50 fw-normal">Final Chapter</span></h6>
+                            <small class="text-white-50">Posted by <span class="text-white">TheoryMaster</span> • 1h ago</small>
                         </div>
                         <span class="badge bg-danger ms-auto">SPOILER</span>
                     </div>
                     <h5 class="mb-2 fw-bold text-danger">ラスサビのあの歌詞、実は...？【考察】</h5>
-                    <p class="text-secondary small spoiler-text">あそこで流れた曲の歌詞を逆再生すると、〇〇のイントロリンクしていることが判明しました。これは〇〇の続編？...
+                    <p class="small spoiler-text">あそこで流れた曲の歌詞を逆再生すると、〇〇のイントロリンクしていることが判明しました。これは〇〇の続編？...
                     </p>
-                    <div class="d-flex gap-3 mt-3 text-white-50">
-                        <span><i class="bi bi-fire me-1"></i> 89</span>
-                        <span><i class="bi bi-chat-left-text me-1"></i> 42</span>
+                    <div class="d-flex gap-3 mt-3 text-white">
+                        <span><i class="bi bi-fire me-1 text-white"></i> 89</span>
+                        <span><i class="bi bi-chat-left-text me-1 text-white"></i> 42</span>
                     </div>
                 </div>
 
@@ -182,32 +199,32 @@
 
             <div class="col-lg-4">
                 <div class="card glass-card p-4 mb-4">
-                    <h5 class="fw-bold mb-4">Trending Tags</h5>
+                    <h5 class="fw-bold mb-4 text-white">Trending Tags</h5>
                     <div class="trending-item">
-                        <div class="small text-muted">#StarWish_Final</div>
-                        <div class="fw-bold">1,240 posts</div>
+                        <div class="small text-white-50">#StarWish_Final</div>
+                        <div class="fw-bold text-white">1,240 posts</div>
                     </div>
                     <div class="trending-item">
-                        <div class="small text-muted">#BMSG_NewArtist</div>
-                        <div class="fw-bold">850 posts</div>
+                        <div class="small text-white-50">#BMSG_NewArtist</div>
+                        <div class="fw-bold text-white">850 posts</div>
                     </div>
                     <div class="trending-item">
-                        <div class="small text-muted">#MoonchaserTheory</div>
-                        <div class="fw-bold">420 posts</div>
+                        <div class="small text-white-50">#MoonchaserTheory</div>
+                        <div class="fw-bold text-white">420 posts</div>
                     </div>
                 </div>
 
                 <div class="card glass-card p-4">
-                    <h5 class="fw-bold mb-4">Now Playing Community</h5>
+                    <h5 class="fw-bold mb-4 text-white">Now Playing Community</h5>
                     <div class="d-flex align-items-center mb-3">
                         <div class="bg-secondary rounded me-3" style="width: 40px; height: 40px;"></div>
                         <div class="small flex-grow-1">
-                            <div class="fw-bold">Genesis</div>
-                            <div class="text-muted">REIKO</div>
+                            <div class="fw-bold text-white">Genesis</div>
+                            <div class="text-white-50">REIKO</div>
                         </div>
                         <i class="bi bi-play-circle-fill text-primary"></i>
                     </div>
-                    <button class="btn btn-outline-primary w-100 btn-sm">Join Music Room</button>
+                    <button class="btn btn-outline-light w-100 btn-sm">Join Music Room</button>
                 </div>
             </div>
         </div>
@@ -221,24 +238,24 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content glass-card border-secondary text-white">
                 <div class="modal-header border-secondary">
-                    <h5 class="modal-title fw-bold">Create Post</h5>
+                    <h5 class="modal-title fw-bold text-white">Create Post</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="postForm">
                         <div class="mb-3">
-                            <select class="form-select bg-dark text-white border-secondary" required>
+                            <select class="form-select border-secondary" required>
                                 <option value="" disabled selected>作品を選択</option>
                                 <option value="1">Star Wish</option>
                                 <option value="2">Moonchaser</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <input type="text" class="form-control bg-dark text-white border-secondary"
+                            <input type="text" class="form-control border-secondary"
                                 placeholder="タイトル" required>
                         </div>
                         <div class="mb-3">
-                            <textarea class="form-control bg-dark text-white border-secondary" rows="5"
+                            <textarea class="form-control border-secondary" rows="5"
                                 placeholder="何を伝えますか？" required></textarea>
                         </div>
                         <div class="form-check form-switch mb-3">

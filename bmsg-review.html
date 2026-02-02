@@ -15,20 +15,30 @@
     <style>
         :root {
             --primary-color: #6366f1;
-            --dark-bg: #1a1a2e;
-            --accent-gradient: linear-gradient(135deg, #4c1d95 0%, #312e81 100%);
+            --dark-bg: #050505;
+            --card-bg: #121212;
+            --accent-gradient: linear-gradient(135deg, #1e1b4b 0%, #050505 100%);
+            --text-white: #ffffff;
+            --text-white-70: rgba(255, 255, 255, 0.7);
+            --text-white-50: rgba(255, 255, 255, 0.5);
         }
 
         body {
             font-family: 'Noto Sans JP', sans-serif;
-            background-color: #f8fafc;
-            color: #334155;
+            background-color: var(--dark-bg);
+            color: var(--text-white);
+        }
+
+        /* 文字色クラスの上書き */
+        .text-muted,
+        .text-secondary {
+            color: var(--text-white-70) !important;
         }
 
         /* ナビゲーション */
         .navbar {
-            background-color: var(--dark-bg);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            background-color: #000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* ページヘッダー */
@@ -37,24 +47,22 @@
             color: white;
             padding: 60px 0;
             margin-bottom: 0;
-            /* サマリーと密着させる */
         }
 
-        /* 評価サマリー（全幅・モダン） */
+        /* 評価サマリー */
         .rating-summary-wrapper {
             background: var(--accent-gradient);
-            color: white;
             padding-bottom: 40px;
             margin-bottom: 40px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .rating-summary-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .rating-large {
@@ -68,25 +76,26 @@
             color: #fbbf24;
         }
 
-        /* プログレスバーのカスタマイズ */
+        /* プログレスバー */
         .progress {
-            background-color: rgba(255, 255, 255, 0.2);
-            height: 12px;
+            background-color: rgba(255, 255, 255, 0.1);
+            height: 10px;
             border-radius: 6px;
         }
 
         /* レビューカード */
         .review-card {
-            border: none;
+            background-color: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s ease;
+            transition: all 0.3s ease;
             margin-bottom: 25px;
         }
 
         .review-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .user-avatar {
@@ -94,14 +103,33 @@
             height: 55px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        /* サイドバーSticky */
+        .review-comment-body {
+            color: #ffffff !important;
+            /* 強制的に白にする */
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            opacity: 1 !important;
+            /* 透過を解除 */
+        }
+
+        /* 補助テキスト（日付やユーザー名など）は少し落としてメリハリをつける */
+        .text-white-50 {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        /* サイドバー */
         .sticky-sidebar {
             position: sticky;
-            top: 20px;
+            top: 100px;
+        }
+
+        .side-card {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         /* フィルターバッジ */
@@ -110,26 +138,57 @@
             padding: 8px 15px;
             border-radius: 30px;
             transition: all 0.2s;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
         }
 
         .filter-badge.active {
             background-color: var(--primary-color) !important;
-            color: white !important;
+            border-color: var(--primary-color) !important;
         }
 
-        /* フローティング投稿ボタン（スマホ用） */
+        /* ページネーション */
+        .page-link {
+            background-color: var(--card-bg);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .page-item.active .page-link {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .page-item.disabled .page-link {
+            background-color: #000;
+            color: var(--text-white-50);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* フローティングボタン */
         .fab-post {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 30px;
+            right: 30px;
             z-index: 1000;
             width: 60px;
             height: 60px;
             border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            border: none;
+        }
+
+        /* フォーム要素 */
+        .form-select {
+            background-color: var(--card-bg);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         @media (max-width: 768px) {
@@ -150,19 +209,19 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="bi bi-film"></i> BMSG MUSIC
+            <a class="navbar-brand fw-bold text-white" href="index.html">
+                <i class="bi bi-vinyl-fill"></i> BMSG MUSIC
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="#">ホーム</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">作品一覧</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">ランキング</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="bmsg-song-list.html">SongList</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="bmsg-ranking.html">Ranking</a></li>
                     <li class="nav-item"><a class="btn btn-outline-light btn-sm ms-lg-3 px-4 rounded-pill"
-                            href="#">ログイン</a></li>
+                            href="bmsg-login.html">ログイン</a></li>
                 </ul>
             </div>
         </div>
@@ -173,11 +232,11 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb justify-content-center">
                     <li class="breadcrumb-item"><a href="#" class="text-white-50">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#" class="text-white-50">作品一覧</a></li>
+                    <li class="breadcrumb-item"><a href="#" class="text-white-50">SongList</a></li>
                     <li class="breadcrumb-item active text-white" aria-current="page">夢中</li>
                 </ol>
             </nav>
-            <h1 class="display-5 fw-bold mb-0">レビュー・評価</h1>
+            <h1 class="display-5 fw-bold mb-0 text-white">レビュー・評価</h1>
         </div>
     </div>
 
@@ -194,33 +253,33 @@
                             <i class="bi bi-star-fill"></i>
                             <i class="bi bi-star-half"></i>
                         </div>
-                        <p class="mb-0 opacity-75 small">1,234件のレビュー</p>
+                        <p class="mb-0 text-white-50 small">1,234件のレビュー</p>
                     </div>
                     <div class="col-md-6 px-lg-5 py-3 py-md-0">
                         <div class="d-flex align-items-center mb-2">
-                            <span class="me-3 small" style="width: 40px;">5星</span>
+                            <span class="me-3 small text-white" style="width: 40px;">5星</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar bg-warning" style="width: 65%"></div>
                             </div>
-                            <span class="ms-3 small opacity-75">802</span>
+                            <span class="ms-3 small text-white-50">802</span>
                         </div>
                         <div class="d-flex align-items-center mb-2">
-                            <span class="me-3 small" style="width: 40px;">4星</span>
+                            <span class="me-3 small text-white" style="width: 40px;">4星</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar bg-warning" style="width: 20%"></div>
                             </div>
-                            <span class="ms-3 small opacity-75">247</span>
+                            <span class="ms-3 small text-white-50">247</span>
                         </div>
                         <div class="d-flex align-items-center">
-                            <span class="me-3 small text-nowrap">他 (3以下)</span>
+                            <span class="me-3 small text-nowrap text-white">他 (3以下)</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar bg-warning opacity-50" style="width: 15%"></div>
                             </div>
-                            <span class="ms-3 small opacity-75">185</span>
+                            <span class="ms-3 small text-white-50">185</span>
                         </div>
                     </div>
                     <div class="col-md-3 text-center d-none d-md-block border-start border-white border-opacity-25">
-                        <p class="mb-3">あなたの感想を<br>教えてください</p>
+                        <p class="mb-3 text-white">あなたの感想を<br>教えてください</p>
                         <button class="btn btn-warning fw-bold px-4 py-2 rounded-pill shadow">
                             <i class="bi bi-pencil-fill me-2"></i>レビューを書く
                         </button>
@@ -234,8 +293,9 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="fw-bold mb-0">レビュー一覧 <span class="badge bg-secondary ms-2 fw-normal">1,234</span></h5>
-                    <select class="form-select form-select-sm w-auto border-0 shadow-sm rounded-pill px-3">
+                    <h5 class="fw-bold mb-0 text-white">レビュー一覧 <span
+                            class="badge bg-secondary ms-2 fw-normal">1,234</span></h5>
+                    <select class="form-select form-select-sm w-auto rounded-pill px-3">
                         <option>新着順</option>
                         <option>参考になった順</option>
                         <option>評価が高い順</option>
@@ -245,31 +305,30 @@
                 <div class="card review-card">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-start mb-3">
-                            <img src="https://placehold.co/100x100/6366f1/ffffff?text=U1" class="user-avatar me-3"
-                                alt="User">
+                            <img src="https://placehold.co/100x100/6366f1/ffffff?text=U1" class="user-avatar me-3">
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between">
-                                    <h6 class="fw-bold mb-0">ワンチャンソード</h6>
-                                    <small class="text-muted">2024/11/15</small>
+                                    <h6 class="fw-bold mb-0 text-white">ワンチャンソード</h6>
+                                    <small class="text-white-50">2024/11/15</small>
                                 </div>
                                 <div class="rating-stars small mb-2">
                                     <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
                                         class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i
                                         class="bi bi-star-fill"></i>
                                     <span
-                                        class="ms-2 badge bg-success-subtle text-success border border-success-subtle fw-normal">視聴済み</span>
+                                        class="ms-2 badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25 fw-normal">再生済み</span>
                                 </div>
-                                <h5 class="fw-bold mb-2">ドラマから来ました！</h5>
-                                <p class="text-secondary mb-3">BE:FIRSTさん、グループ名を知っている程度でしたが、主題歌で引き込まれました。他の曲も聴き漁るほどファンに！
-                                </p>
+                                <h5 class="fw-bold mb-2 text-white">ドラマから来ました！</h5>
+                                <p class="review-comment-body">
+                                    BE:FIRSTさん、グループ名を知っている程度でしたが、主題歌で引き込まれました。他の曲も聴き漁るほどファンになりました！</p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn-group">
                                         <button class="btn btn-sm btn-outline-primary rounded-pill px-3 me-2">
                                             <i class="bi bi-hand-thumbs-up me-1"></i> 234
                                         </button>
-                                        <button class="btn btn-sm btn-link text-decoration-none text-muted">返信</button>
+                                        <button class="btn btn-sm text-white-50">返信</button>
                                     </div>
-                                    <button class="btn btn-sm text-muted"><i class="bi bi-flag"></i></button>
+                                    <button class="btn btn-sm text-white-50"><i class="bi bi-flag"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -288,25 +347,25 @@
 
             <div class="col-lg-4">
                 <div class="sticky-sidebar">
-                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card side-card shadow-sm rounded-4 mb-4">
                         <div class="card-body p-4">
-                            <h6 class="fw-bold mb-3"><i class="bi bi-funnel me-2"></i>絞り込み</h6>
+                            <h6 class="fw-bold mb-3 text-white"><i class="bi bi-funnel me-2"></i>絞り込み</h6>
                             <div class="d-flex flex-wrap gap-2 mb-4">
-                                <span class="badge bg-light text-dark filter-badge active border">すべて</span>
-                                <span class="badge bg-light text-dark filter-badge border">★5のみ</span>
-                                <span class="badge bg-light text-dark filter-badge border">ネタバレなし</span>
+                                <span class="badge filter-badge active">すべて</span>
+                                <span class="badge filter-badge">★5のみ</span>
+                                <span class="badge filter-badge">ネタバレなし</span>
                             </div>
 
-                            <h6 class="fw-bold mb-3"><i class="bi bi-graph-up me-2"></i>評価の傾向</h6>
+                            <h6 class="fw-bold mb-3 text-white"><i class="bi bi-graph-up me-2"></i>評価の傾向</h6>
                             <div class="mb-3 small">
-                                <div class="d-flex justify-content-between mb-1"><span>音楽</span><span
+                                <div class="d-flex justify-content-between mb-1 text-white"><span>音楽</span><span
                                         class="fw-bold">4.8</span></div>
                                 <div class="progress">
                                     <div class="progress-bar bg-primary" style="width: 96%"></div>
                                 </div>
                             </div>
                             <div class="mb-3 small">
-                                <div class="d-flex justify-content-between mb-1"><span>演出</span><span
+                                <div class="d-flex justify-content-between mb-1 text-white"><span>演出</span><span
                                         class="fw-bold">4.6</span></div>
                                 <div class="progress">
                                     <div class="progress-bar bg-primary" style="width: 92%"></div>
@@ -315,11 +374,12 @@
                         </div>
                     </div>
 
-                    <div class="card bg-dark text-white border-0 shadow-sm rounded-4">
+                    <div
+                        class="card bg-primary bg-opacity-10 border border-primary border-opacity-25 shadow-sm rounded-4">
                         <div class="card-body p-4 text-center">
-                            <h6 class="fw-bold">最新ライブ配信中！</h6>
-                            <p class="small opacity-75">BMSGアーティストの最新ライブをチェックしよう。</p>
-                            <a href="#" class="btn btn-primary btn-sm w-100 rounded-pill">詳細を見る</a>
+                            <h6 class="fw-bold text-white">最新ライブ配信中！</h6>
+                            <p class="small text-white-50">BMSGアーティストの最新ライブをチェックしよう。</p>
+                            <a href="#" class="btn btn-primary btn-sm w-100 rounded-pill fw-bold">詳細を見る</a>
                         </div>
                     </div>
                 </div>
@@ -327,13 +387,20 @@
         </div>
     </div>
 
-    <button class="btn btn-primary d-md-none fab-post shadow">
+    <button class="fab-post shadow">
         <i class="bi bi-pencil-square fs-4"></i>
     </button>
 
-    <footer class="bg-white border-top py-5 mt-5">
+    <footer class="py-5 mt-5 bg-black border-top border-white border-opacity-10">
         <div class="container text-center">
-            <p class="text-muted small">© 2026 BMSG MUSIC Hub. All Rights Reserved.</p>
+            <h5 class="fw-bold text-white mb-4">BMSG MUSIC</h5>
+            <div class="d-flex justify-content-center gap-4 mb-4">
+                <a href="#" class="text-white opacity-75"><i class="bi bi-twitter-x fs-4"></i></a>
+                <a href="#" class="text-white opacity-75"><i class="bi bi-instagram fs-4"></i></a>
+                <a href="#" class="text-white opacity-75"><i class="bi bi-youtube fs-4"></i></a>
+            </div>
+            <hr class="border-secondary opacity-25">
+            <p class="small mb-0 text-white-50">&copy; 2026 BMSG MUSIC.</p>
         </div>
     </footer>
 
