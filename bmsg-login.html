@@ -28,7 +28,6 @@
             justify-content: center;
             margin: 0;
             transition: background-color 0.3s ease;
-            /* 背景変化用 */
         }
 
         /* ログイン失敗時の背景発光アニメーション */
@@ -37,13 +36,8 @@
         }
 
         @keyframes red-flash {
-            from {
-                background-color: var(--bmsg-black);
-            }
-
-            to {
-                background-color: #300000;
-            }
+            from { background-color: var(--bmsg-black); }
+            to { background-color: #300000; }
         }
 
         .login-card {
@@ -62,27 +56,10 @@
         }
 
         @keyframes shake-anim {
-
-            10%,
-            90% {
-                transform: translate3d(-1px, 0, 0);
-            }
-
-            20%,
-            80% {
-                transform: translate3d(2px, 0, 0);
-            }
-
-            30%,
-            50%,
-            70% {
-                transform: translate3d(-4px, 0, 0);
-            }
-
-            40%,
-            60% {
-                transform: translate3d(4px, 0, 0);
-            }
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
         .login-header i {
@@ -143,7 +120,6 @@
             color: white;
         }
 
-        /* エラーメッセージ */
         .error-msg {
             color: var(--bmsg-red);
             font-size: 0.75rem;
@@ -178,12 +154,35 @@
             border: 1px solid #444;
             color: var(--pure-white);
             padding: 12px;
+            transition: all 0.2s;
         }
 
-        a {
+        .btn-social:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: #666;
+        }
+
+        /* 新規登録セクションのスタイル */
+        .signup-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .signup-link {
             color: var(--pure-white);
-            text-decoration: underline;
-            text-underline-offset: 4px;
+            font-weight: bold;
+            text-decoration: none;
+            border-bottom: 1px solid var(--pure-white);
+            padding-bottom: 2px;
+            transition: all 0.2s;
+        }
+
+        .signup-link:hover {
+            color: var(--bmsg-red);
+            border-color: var(--bmsg-red);
         }
 
         .back-link {
@@ -191,6 +190,7 @@
             top: 20px;
             left: 20px;
             text-decoration: none;
+            color: var(--pure-white);
             font-weight: bold;
             font-size: 0.8rem;
         }
@@ -225,16 +225,21 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-login w-100">ログイン</button>
+            <button type="submit" class="btn btn-login w-100 shadow-sm">ログイン</button>
             <div class="error-msg" id="errorMsg">AUTHENTICATION FAILED. PLEASE TRY AGAIN.</div>
         </form>
 
         <div class="divider"><span>Or continue with</span></div>
 
-        <div class="d-flex gap-2 mb-5">
+        <div class="d-flex gap-2">
             <button class="btn btn-social"><i class="bi bi-google"></i></button>
             <button class="btn btn-social"><i class="bi bi-twitter-x"></i></button>
             <button class="btn btn-social"><i class="bi bi-apple"></i></button>
+        </div>
+
+        <div class="signup-section">
+            <span style="color: #888;">アカウントをお持ちでないですか？</span><br>
+            <a href="bmsg-signup.html" class="signup-link mt-2 d-inline-block">新規登録はこちら</a>
         </div>
     </div>
 
@@ -256,14 +261,10 @@
 
         loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
-
-            // 演出テスト用に、どんな入力でも一度「失敗」させる設定にしています
-            // 演出開始
             document.body.classList.add('auth-error');
             loginCard.classList.add('shake');
             errorMsg.style.display = 'block';
 
-            // 3秒後に演出を解除
             setTimeout(() => {
                 document.body.classList.remove('auth-error');
                 loginCard.classList.remove('shake');
